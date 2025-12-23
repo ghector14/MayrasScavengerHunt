@@ -18,10 +18,10 @@
         <div class="content-card" id="contentCard">
             <!-- Welcome Screen -->
             <div class="screen active" id="welcomeScreen">
-                <h1>Welcome, Mayra! 🎯</h1>
-                <p>Ready for an adventure around town?</p>
-                <p>You'll solve puzzles and discover 6 special locations. Each puzzle unlocks a hint to the next stop.</p>
-                <button class="btn-primary" onclick="startHunt()">Start the Hunt</button>
+                <h1>Welcome, Mayra</h1>
+                <p>Ready for an adventure around our favorite places?</p>
+                <p>You'll solve puzzles and discover 6 special locations. Each puzzle unlocks a clue to the next stop.</p>
+                <button class="btn-primary" onclick="startHunt()">Begin</button>
             </div>
 
             <!-- Puzzle Screen -->
@@ -37,12 +37,13 @@
                 <div class="feedback" id="puzzleFeedback"></div>
             </div>
 
-            <!-- Hint Screen -->
+            <!-- Clue Screen -->
             <div class="screen" id="hintScreen">
-                <h2>Great job!</h2>
+                <h2>Puzzle Solved</h2>
                 <div class="hint-box">
-                    <h3>Hint for Next Location:</h3>
+                    <h3>Clue for Next Location:</h3>
                     <p class="hint-text" id="hintText"></p>
+                    <p class="kiss-requirement">Want help? Give Hector a kiss for a clue</p>
                 </div>
                 <div class="input-group">
                     <input type="text" id="locationGuess" placeholder="Where is this place?" autocomplete="off">
@@ -53,15 +54,38 @@
 
             <!-- Success Screen -->
             <div class="screen" id="successScreen">
-                <h2>Perfect! ✨</h2>
-                <p>You found it! Ready for the next puzzle?</p>
-                <button class="btn-primary" onclick="nextStop()">Continue</button>
+                <h2>Location Found</h2>
+                <p>You found it! Now prove you're there with a photo.</p>
+                <button class="btn-primary" onclick="showCamera()">Take Photo</button>
+            </div>
+
+            <!-- Camera Screen -->
+            <div class="screen" id="cameraScreen">
+                <h2>Capture Proof</h2>
+                <p>Take a photo to show Hector</p>
+                <div class="camera-container">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <canvas id="cameraCanvas" style="display: none;"></canvas>
+                    <img id="capturedPhoto" style="display: none;" />
+                </div>
+                <div class="camera-buttons">
+                    <button class="btn-primary" id="captureBtn" onclick="capturePhoto()">Capture</button>
+                    <button class="btn-primary" id="retakeBtn" onclick="retakePhoto()" style="display: none;">Retake</button>
+                </div>
+                <div id="verificationSection" style="display: none;">
+                    <p class="verification-text">Show Hector the photo. He'll give you a code to continue</p>
+                    <div class="input-group">
+                        <input type="text" id="verificationCode" placeholder="Enter code..." autocomplete="off">
+                        <button class="btn-primary" onclick="verifyCode()">Verify</button>
+                    </div>
+                    <div class="feedback" id="codeFeedback"></div>
+                </div>
             </div>
 
             <!-- Final Screen -->
             <div class="screen" id="finalScreen">
-                <h1>You Did It! 🎊</h1>
-                <p>You've completed all 6 stops of the adventure!</p>
+                <h1>Quest Complete</h1>
+                <p>You've completed all 6 stops of the adventure</p>
                 <p class="final-message" id="finalMessage"></p>
             </div>
         </div>

@@ -5,11 +5,11 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
     min-height: 100vh;
     padding: 20px;
-    color: #333;
+    color: #ffffff;
 }
 
 .container {
@@ -19,52 +19,58 @@ body {
 
 /* Progress Bar */
 .progress-container {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
 }
 
 .progress-bar {
-    height: 8px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    border-radius: 4px;
+    height: 6px;
+    background: linear-gradient(90deg, #10b981 0%, #8b5cf6 100%);
+    border-radius: 3px;
     width: 0%;
-    transition: width 0.5s ease;
-    margin-bottom: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 12px;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
 }
 
 .progress-text {
     text-align: center;
     font-weight: 600;
-    color: #667eea;
-    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 /* Content Card */
 .content-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    min-height: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    min-height: 450px;
+    backdrop-filter: blur(10px);
 }
 
 /* Screens */
 .screen {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .screen.active {
     display: block;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -74,105 +80,143 @@ body {
 
 /* Typography */
 h1 {
-    color: #667eea;
-    margin-bottom: 20px;
-    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 24px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 h2 {
-    color: #667eea;
-    margin-bottom: 15px;
-    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 h3 {
-    color: #764ba2;
-    margin-bottom: 10px;
-    font-size: 18px;
+    color: #8b5cf6;
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 p {
-    line-height: 1.6;
-    margin-bottom: 15px;
-    color: #555;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 15px;
 }
 
 .stop-title {
     text-align: center;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 28px;
+    background: linear-gradient(90deg, #10b981 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Puzzle Content */
 .puzzle-content {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    min-height: 150px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    min-height: 140px;
     font-size: 16px;
     line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .puzzle-content strong {
-    color: #667eea;
+    color: #8b5cf6;
+    font-weight: 600;
 }
 
 /* Hint Box */
 .hint-box {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-left: 4px solid #667eea;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-left: 4px solid #8b5cf6;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 28px;
 }
 
 .hint-text {
     font-size: 16px;
-    color: #333;
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.kiss-requirement {
+    font-size: 13px;
+    color: rgba(139, 92, 246, 0.8);
+    font-style: italic;
+    text-align: center;
+    margin-top: 16px;
     margin-bottom: 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 /* Input Group */
 .input-group {
     display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 input[type="text"] {
     flex: 1;
-    padding: 14px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    font-size: 15px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    font-family: inherit;
 }
 
 input[type="text"]:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.05);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* Buttons */
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #10b981 0%, #8b5cf6 100%);
     color: white;
     border: none;
-    padding: 14px 24px;
-    border-radius: 10px;
-    font-size: 16px;
+    padding: 16px 28px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    letter-spacing: 0.3px;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
 }
 
 .btn-primary:active {
@@ -181,18 +225,19 @@ input[type="text"]:focus {
 
 /* Feedback Messages */
 .feedback {
-    padding: 12px 16px;
-    border-radius: 8px;
+    padding: 14px 20px;
+    border-radius: 10px;
     font-weight: 500;
     text-align: center;
-    margin-top: 10px;
-    animation: slideIn 0.3s ease;
+    margin-top: 12px;
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
 }
 
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-5px);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -201,24 +246,25 @@ input[type="text"]:focus {
 }
 
 .feedback.correct {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .feedback.incorrect {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* Final Message */
 .final-message {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
-    color: #667eea;
+    color: rgba(255, 255, 255, 0.9);
     text-align: center;
-    margin-top: 20px;
+    margin-top: 24px;
+    line-height: 1.8;
 }
 
 /* Welcome Screen Specific */
@@ -226,9 +272,18 @@ input[type="text"]:focus {
     text-align: center;
 }
 
+#welcomeScreen h1 {
+    background: linear-gradient(90deg, #10b981 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 36px;
+}
+
 #welcomeScreen p {
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Success Screen */
@@ -237,8 +292,9 @@ input[type="text"]:focus {
 }
 
 #successScreen p {
-    font-size: 18px;
-    margin-bottom: 25px;
+    font-size: 17px;
+    margin-bottom: 28px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Final Screen */
@@ -247,26 +303,84 @@ input[type="text"]:focus {
 }
 
 #finalScreen h1 {
-    font-size: 32px;
-    margin-bottom: 25px;
+    font-size: 34px;
+    margin-bottom: 28px;
+    background: linear-gradient(90deg, #10b981 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Camera Screen */
+#cameraScreen {
+    text-align: center;
+}
+
+.camera-container {
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 24px 0;
+    max-width: 100%;
+    position: relative;
+}
+
+#cameraVideo {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+#capturedPhoto {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.camera-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.camera-buttons button {
+    width: 100%;
+}
+
+#verificationSection {
+    margin-top: 24px;
+    padding: 24px;
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+}
+
+.verification-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #8b5cf6;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
     body {
-        padding: 15px;
+        padding: 16px;
     }
 
     .content-card {
-        padding: 25px 20px;
+        padding: 32px 24px;
     }
 
     h1 {
-        font-size: 24px;
+        font-size: 28px;
     }
 
     h2 {
-        font-size: 20px;
+        font-size: 22px;
     }
 
     .input-group {
