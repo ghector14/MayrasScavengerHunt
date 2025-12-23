@@ -7,25 +7,25 @@ const stops = [
     {
         title: "Stop 1",
         puzzle: {
-            content: "Your first puzzle goes here. This could be a riddle, a question, or any challenge you want!",
-            answer: "answer1" // Change this to your actual answer
+            content: "Solve: 3 + 5 × 2 - 4 = ?",
+            answer: "9" // Change this to your actual answer
         },
-        hint: "This is where you'll put your hint for the first location.",
+       hint: "Seek the park that shares its name with the trees that shelter it.",
         location: {
-            answer: "location1", // Change this to the actual location name
-            alternatives: [] // Add alternative accepted answers if needed
+            answer: "oak park",
+            alternatives: ["oakpark", "oak park playground"] // Accept variations
         }
     },
     {
         title: "Stop 2",
         puzzle: {
-            content: "Second puzzle content goes here.",
-            answer: "answer2"
+            content: "2³ + 4 × 3 - 5 = ?",
+            answer: "15"
         },
-        hint: "Hint for the second location.",
+        hint: "This park shares its name with a school in pasco",
         location: {
-            answer: "location2",
-            alternatives: []
+            answer: "Stevens",
+            alternatives: ["stevens", "stevens middle school"]
         }
     },
     {
