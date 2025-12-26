@@ -8,8 +8,8 @@ const stops = [
     {
         title: "Stop 1",
         puzzle: {
-            content: "<strong>Solve this math problem:</strong><br><br>3 + 5 × 2 - 4 = ?",
-            answer: "9" // Order of operations: 5×2=10, then 3+10-4=9
+            content: "<strong>Solve this math problem:</strong><br><br>3² × (8 - 5) - 18 ÷ 2 = ?",
+            answer: "18"
         },
         hint: "Seek the park that shares its name with the trees that shelter it.",
         location: {
@@ -21,8 +21,9 @@ const stops = [
     {
         title: "Stop 2",
         puzzle: {
-            content: "<strong>Solve this math problem:</strong><br><br>2³ + 4 × 3 - 5 = ?",
-            answer: "15" // 2³=8, 4×3=12, then 8+12-5=15
+            content: "<strong>Solve this math problem:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
+            answer: "Conservation of energy",
+            alternatives: ["conservation of energy", "first law of thermodynamics"]
         },
         hint: "This park shares its name with a middle school in Pasco.",
         location: {
@@ -359,9 +360,6 @@ function showFinal() {
     currentStage = 'final';
     document.getElementById('finalMessage').textContent = finalMessage;
     showScreen('finalScreen');
-    
-    // Update progress to 100%
-    document.getElementById('progressBar').style.width = '100%';
 }
 
 // Enter key support
@@ -386,3 +384,88 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Final Camera Functions
+async function showFinalCamera() {
+    showScreen('finalCameraScreen');
+    
+    // Reset camera UI
+    document.getElementById('finalCameraVideo').style.display = 'block';
+    document.getElementById('finalCapturedPhoto').style.display = 'none';
+    document.getElementById('finalCaptureBtn').style.display = 'block';
+    document.getElementById('finalRetakeBtn').style.display = 'none';
+    document.getElementById('finalConfirmBtn').style.display = 'none';
+    
+    try {
+        // Request camera access
+        cameraStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'environment' }
+        });
+        document.getElementById('finalCameraVideo').srcObject = cameraStream;
+    } catch (error) {
+        console.error('Camera access error:', error);
+        alert('Unable to access camera. Please allow camera permissions and try again.');
+    }
+}
+
+function captureFinalPhoto() {
+    const video = document.getElementById('finalCameraVideo');
+    const canvas = document.getElementById('finalCameraCanvas');
+    const photo = document.getElementById('finalCapturedPhoto');
+    
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    // Draw video frame to canvas
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Convert canvas to image
+    const imageDataUrl = canvas.toDataURL('image/png');
+    photo.src = imageDataUrl;
+    
+    // Update UI
+    video.style.display = 'none';
+    photo.style.display = 'block';
+    document.getElementById('finalCaptureBtn').style.display = 'none';
+    document.getElementById('finalRetakeBtn').style.display = 'block';
+    document.getElementById('finalConfirmBtn').style.display = 'block';
+    
+    // Stop camera stream
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+    }
+}
+
+async function retakeFinalPhoto() {
+    document.getElementById('finalCameraVideo').style.display = 'block';
+    document.getElementById('finalCapturedPhoto').style.display = 'none';
+    document.getElementById('finalCaptureBtn').style.display = 'block';
+    document.getElementById('finalRetakeBtn').style.display = 'none';
+    document.getElementById('finalConfirmBtn').style.display = 'none';
+    
+    // Restart camera
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'environment' }
+        });
+        document.getElementById('finalCameraVideo').srcObject = cameraStream;
+    } catch (error) {
+        console.error('Camera access error:', error);
+        alert('Unable to access camera. Please allow camera permissions and try again.');
+    }
+}
+
+function confirmFinalPhoto() {
+    // Stop camera stream if still active
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+    }
+    
+    // Show completion screen
+    showScreen('completionScreen');
+    
+    // Update progress to 100%
+    document.getElementById('progressBar').style.width = '100%';
+}

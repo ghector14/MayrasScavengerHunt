@@ -19,7 +19,7 @@
             <!-- Welcome Screen -->
             <div class="screen active" id="welcomeScreen">
                 <h1>Welcome, Mayra</h1>
-                <p>Scavenger Hunt Adventure</p>
+                <p>Richland scavenger hunt</p>
                 <p>You'll solve puzzles and discover 6 special locations. Each puzzle unlocks a clue to the next stop.</p>
                 <button class="btn-primary" onclick="startHunt()">Begin</button>
             </div>
@@ -43,7 +43,7 @@
                 <div class="hint-box">
                     <h3>Clue for Next Location:</h3>
                     <p class="hint-text" id="hintText"></p>
-                    <p class="kiss-requirement">Want help? Give Hector a kiss for a clue</p>
+                    <p class="kiss-requirement">Want help? Give Hector a kiss for a hint. (max 3 or final prize is gone)</p>
                 </div>
                 <div class="input-group">
                     <input type="text" id="locationGuess" placeholder="Where is this place?" autocomplete="off">
@@ -84,9 +84,33 @@
 
             <!-- Final Screen -->
             <div class="screen" id="finalScreen">
-                <h1>Quest Complete</h1>
-                <p>You've completed all 6 stops of the adventure</p>
+                <h1>Almost done</h1>
+                <p>You've completed all 6 stops of the adventure but...</p>
                 <p class="final-message" id="finalMessage"></p>
+                <button class="btn-primary" id="finalPhotoBtn" onclick="showFinalCamera()">Take Final Photo</button>
+            </div>
+
+            <!-- Final Camera Screen -->
+            <div class="screen" id="finalCameraScreen">
+                <h2>Final Challenge</h2>
+                <p>Capture the sleeping monster</p>
+                <div class="camera-container">
+                    <video id="finalCameraVideo" autoplay playsinline></video>
+                    <canvas id="finalCameraCanvas" style="display: none;"></canvas>
+                    <img id="finalCapturedPhoto" style="display: none;" />
+                </div>
+                <div class="camera-buttons">
+                    <button class="btn-primary" id="finalCaptureBtn" onclick="captureFinalPhoto()">Capture</button>
+                    <button class="btn-primary" id="finalRetakeBtn" onclick="retakeFinalPhoto()" style="display: none;">Retake</button>
+                    <button class="btn-primary" id="finalConfirmBtn" onclick="confirmFinalPhoto()" style="display: none;">Complete Quest</button>
+                </div>
+            </div>
+
+            <!-- Completion Screen -->
+            <div class="screen" id="completionScreen">
+                <h1>Adventure Complete</h1>
+                <p>Congratulations, Mayra! You've solved every puzzle and captured proof of your journey.</p>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-top: 24px;">This adventure was made with love by Hector, hope you enjoyed it.</p>
             </div>
         </div>
     </div>
