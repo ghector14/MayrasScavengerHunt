@@ -9,7 +9,7 @@ const stops = [
         title: "Stop 1",
         puzzle: {
             content: "<strong>Solve this math problem:</strong><br><br>3² × (8 - 5) - 18 ÷ 2 = ?",
-            answer: "18"
+            answer: "18" 
         },
         hint: "Seek the park that shares its name with the trees that shelter it.",
         location: {
@@ -21,11 +21,11 @@ const stops = [
     {
         title: "Stop 2",
         puzzle: {
-            content: "<strong>Solve this math problem:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
+            content: "<strong>What is this called?:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
             answer: "Conservation of energy",
-            alternatives: ["conservation of energy", "first law of thermodynamics"]
+            alternatives: ["conservation of energy", "first law of thermodynamics"] // Accept variations
         },
-        hint: "This park shares its name with a middle school in Pasco.",
+        hint: "Stripes of orange in Pasco's pride, the park that bears its name resides",
         location: {
             answer: "stevens park",
             alternatives: ["stevens", "stevenspark"]
@@ -65,7 +65,7 @@ const stops = [
             content: "<strong>Hunter x Hunter Question:</strong><br><br>What was Kurapika's badge number during the Hunter Exam?",
             answer: "404"
         },
-        hint: "Cherchez le lieu où les lapins vont se cacher.",
+        hint: "Down the rabbit hole you go, where wonders hide and secrets flow.",
         location: {
             answer: "adventures underground",
             alternatives: ["adventures", "underground"]
@@ -87,7 +87,7 @@ const stops = [
     }
 ];
 
-const finalMessage = "Seek the creature who sleeps through each battle and blocks every path, whose soft belly rises and falls, avoiding all wrath. This lazy giant snores loud, shaking earth with its sound. When you find this sleeping monster among cards all around, a snapshot is required to complete what you've found.";
+const finalMessage = "This lazy giant snores loud, shaking earth with its sound. When you find this sleeping monster among cards all around, a snapshot is required to complete what you've found.";
 
 // Initialize
 function init() {
@@ -239,6 +239,10 @@ async function showCamera() {
     document.getElementById('codeFeedback').className = 'feedback';
     document.getElementById('codeFeedback').textContent = '';
     
+    // Reset verification text to default
+    document.querySelector('#verificationSection .verification-text').textContent = 
+        'Show Hector the photo. He\'ll give you a code to continue';
+    
     try {
         // Request camera access
         cameraStream = await navigator.mediaDevices.getUserMedia({ 
@@ -274,7 +278,15 @@ function capturePhoto() {
     photo.style.display = 'block';
     document.getElementById('captureBtn').style.display = 'none';
     document.getElementById('retakeBtn').style.display = 'block';
-    document.getElementById('verificationSection').style.display = 'block';
+    
+    // Check if this is Stop 5 (Adventures Underground) - needs purple book photo
+    if (currentStop === 4) { // Stop 5 is index 4
+        document.getElementById('verificationSection').style.display = 'block';
+        document.querySelector('#verificationSection .verification-text').textContent = 
+            'Before the next puzzle is revealed, your lens must catch this special book, where purple has conquered every nook. Show Hector both photos. He\'ll give you a code to continue';
+    } else {
+        document.getElementById('verificationSection').style.display = 'block';
+    }
     
     // Stop camera stream
     if (cameraStream) {
