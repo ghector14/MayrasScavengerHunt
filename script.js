@@ -22,10 +22,10 @@ const stops = [
         title: "Stop 2",
         puzzle: {
             content: "<strong>What is this called?:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
-            answer: "Conservation of energy",
-            alternatives: ["conservation of energy", "first law of thermodynamics"] // Accept variations
+            answer: "conservation of energy",
+            alternatives: ["first law of thermodynamics"] // Accept variations
         },
-        hint: "Stripes of orange in Pasco's pride, the park that bears its name resides",
+        hint: "Stripes of orange in Pasco's pride, the park that bears its name resides.",
         location: {
             answer: "stevens park",
             alternatives: ["stevens", "stevenspark"]
@@ -234,14 +234,21 @@ async function showCamera() {
     document.getElementById('capturedPhoto').style.display = 'none';
     document.getElementById('captureBtn').style.display = 'block';
     document.getElementById('retakeBtn').style.display = 'none';
+    document.getElementById('bookPhotoBtn').style.display = 'none';
     document.getElementById('verificationSection').style.display = 'none';
     document.getElementById('verificationCode').value = '';
     document.getElementById('codeFeedback').className = 'feedback';
     document.getElementById('codeFeedback').textContent = '';
     
+    // Reset text
+    document.querySelector('#cameraScreen p').textContent = 'Take a photo to show Hector';
+    
     // Reset verification text to default
     document.querySelector('#verificationSection .verification-text').textContent = 
         'Show Hector the photo. He\'ll give you a code to continue';
+    
+    // Reset capture button function
+    document.getElementById('captureBtn').onclick = capturePhoto;
     
     try {
         // Request camera access
@@ -277,16 +284,74 @@ function capturePhoto() {
     video.style.display = 'none';
     photo.style.display = 'block';
     document.getElementById('captureBtn').style.display = 'none';
-    document.getElementById('retakeBtn').style.display = 'block';
     
     // Check if this is Stop 5 (Adventures Underground) - needs purple book photo
     if (currentStop === 4) { // Stop 5 is index 4
-        document.getElementById('verificationSection').style.display = 'block';
-        document.querySelector('#verificationSection .verification-text').textContent = 
-            'Before the next puzzle is revealed, your lens must catch this special book, where purple has conquered every nook. Show Hector both photos. He\'ll give you a code to continue';
+        document.getElementById('retakeBtn').style.display = 'block';
+        document.getElementById('bookPhotoBtn').style.display = 'block';
+        document.querySelector('#cameraScreen p').textContent = 'Before the next puzzle is revealed, your lens must catch this special book, where purple has conquered every nook';
     } else {
+        document.getElementById('retakeBtn').style.display = 'block';
         document.getElementById('verificationSection').style.display = 'block';
     }
+    
+    // Stop camera stream
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+    }
+}
+
+// Take Book Photo (for Stop 5)
+async function takeBookPhoto() {
+    // Hide location photo and buttons
+    document.getElementById('capturedPhoto').style.display = 'none';
+    document.getElementById('retakeBtn').style.display = 'none';
+    document.getElementById('bookPhotoBtn').style.display = 'none';
+    
+    // Show camera again
+    document.getElementById('cameraVideo').style.display = 'block';
+    document.getElementById('captureBtn').style.display = 'block';
+    
+    // Update capture button to capture book photo
+    document.getElementById('captureBtn').onclick = captureBookPhoto;
+    document.querySelector('#cameraScreen p').textContent = 'Take a photo of the purple book';
+    
+    // Restart camera
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'environment' }
+        });
+        document.getElementById('cameraVideo').srcObject = cameraStream;
+    } catch (error) {
+        console.error('Camera access error:', error);
+        alert('Unable to access camera. Please allow camera permissions and try again.');
+    }
+}
+
+// Capture Book Photo
+function captureBookPhoto() {
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('cameraCanvas');
+    
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    // Draw video frame to canvas
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // We don't need to display the book photo, just capture it
+    
+    // Update UI - hide camera, show verification
+    video.style.display = 'none';
+    document.getElementById('captureBtn').style.display = 'none';
+    document.getElementById('verificationSection').style.display = 'block';
+    document.querySelector('#verificationSection .verification-text').textContent = 
+        'Show Hector both photos. He\'ll give you a code to continue';
+    
+    // Reset the capture button for future use
+    document.getElementById('captureBtn').onclick = capturePhoto;
     
     // Stop camera stream
     if (cameraStream) {
@@ -300,10 +365,14 @@ async function retakePhoto() {
     document.getElementById('capturedPhoto').style.display = 'none';
     document.getElementById('captureBtn').style.display = 'block';
     document.getElementById('retakeBtn').style.display = 'none';
+    document.getElementById('bookPhotoBtn').style.display = 'none';
     document.getElementById('verificationSection').style.display = 'none';
     document.getElementById('verificationCode').value = '';
     document.getElementById('codeFeedback').className = 'feedback';
     document.getElementById('codeFeedback').textContent = '';
+    
+    // Reset text
+    document.querySelector('#cameraScreen p').textContent = 'Take a photo to show Hector';
     
     // Restart camera
     try {
