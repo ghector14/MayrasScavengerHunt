@@ -78,7 +78,7 @@ const stops = [
             content: "<strong>Word Problem:</strong><br><br>Mayra works at the lab for 50 weeks a year, earning 10 samples per week. At year-end, she receives a bonus of 3² additional samples. What's her total sample count?",
             answer: "509"
         },
-        hint: "Your answer unlocks more than this puzzle's gate - it names the vault where pocket monsters await.",
+        hint: "Your answer unlocks more than this puzzle's gate, it names the vault where pocket monsters await.",
         location: {
             answer: "vault 509",
             alternatives: ["vault", "vault509"]
@@ -213,9 +213,8 @@ function showSuccess() {
     // Check if this is the final stop
     if (currentStop === stops.length - 1) {
         // Customize message for final stop
-        document.querySelector('#successScreen h2').textContent = 'Congratulations';
-        document.querySelector('#successScreen p').textContent = 'But wait... there\'s one more thing.';
-    } else {
+        document.querySelector('#successScreen h2').textContent = 'Location Found';
+        document.querySelector('#successScreen p').textContent = 'You found it! Now prove you\'re there with a photo.';
         // Reset to default for other stops
         document.querySelector('#successScreen h2').textContent = 'Location Found';
         document.querySelector('#successScreen p').textContent = 'You found it! Now prove you\'re there with a photo.';
