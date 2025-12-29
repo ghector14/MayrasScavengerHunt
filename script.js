@@ -1,29 +1,28 @@
 // Game State
 let currentStop = 0;
-let currentStage = 'welcome'; // welcome, puzzle, hint, success, camera, final
-let cameraStream = null;
+let currentStage = 'welcome'; // welcome, puzzle, hint, success, book, final
 
 // Scavenger Hunt Data
 const stops = [
     {
         title: "Stop 1",
         puzzle: {
-            content: "<strong>Solve this math problem:</strong><br><br>3² × (8 - 5) - 18 ÷ 2 = ?",
+            content: "<strong>Solve this math problem for clue:</strong><br><br>3² × (8 - 5) - 18 ÷ 2 = ?",
             answer: "18" 
         },
         hint: "Seek the park that shares its name with the trees that shelter it.",
         location: {
             answer: "oak park",
-            alternatives: ["oakpark", "oak park playground"] // Accept variations
+            alternatives: ["oakpark", "oak park playground"]
         },
         verificationCode: "100"
     },
     {
         title: "Stop 2",
         puzzle: {
-            content: "<strong>What is this called?:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
+            content: "<strong>For the clue, what is this called?:</strong><br><br>Energy cannot be created or destroyed, only transformed. What is this law called?",
             answer: "conservation of energy",
-            alternatives: ["first law of thermodynamics"] // Accept variations
+            alternatives: ["first law of thermodynamics"]
         },
         hint: "Stripes of orange in Pasco's pride, the park that bears its name resides.",
         location: {
@@ -35,9 +34,9 @@ const stops = [
     {
         title: "Stop 3",
         puzzle: {
-            content: "<strong>Physics Question:</strong><br><br>What element with atomic number 94 was produced at Hanford for the Manhattan Project?",
+            content: "<strong>Physics Question for clue:</strong><br><br>What element with atomic number 94 was produced at Hanford for the Manhattan Project?",
             answer: "plutonium",
-            alternatives: ["pu"] // Accept element symbol
+            alternatives: ["pu"]
         },
         hint: "Columbia was its name, planes are its game, for Mayra to win, for this stop she must aim.",
         location: {
@@ -49,7 +48,7 @@ const stops = [
     {
         title: "Stop 4",
         puzzle: {
-            content: "<strong>Fill in the blank:</strong><br><br>An ______ zone is any area of the body that becomes sexually aroused or sensitive when touched, leading to pleasure.",
+            content: "<strong>Fill in the blank for the clue:</strong><br><br>An ______ zone is any area of the body that becomes sexually aroused or sensitive when touched, leading to pleasure.",
             answer: "erogenous"
         },
         hint: "The inside is a maze for your eyes, though the taste is savory fried rice.",
@@ -62,7 +61,7 @@ const stops = [
     {
         title: "Stop 5",
         puzzle: {
-            content: "<strong>Hunter x Hunter Question:</strong><br><br>What was Kurapika's badge number during the Hunter Exam?",
+            content: "<strong>Hunter x Hunter Question for clue:</strong><br><br>What was Kurapika's badge number during the Hunter Exam?",
             answer: "404"
         },
         hint: "Down the rabbit hole you go, where wonders hide and secrets flow.",
@@ -70,12 +69,13 @@ const stops = [
             answer: "adventures underground",
             alternatives: ["adventures", "underground"]
         },
-        verificationCode: "500"
+        verificationCode: "500",
+        requiresBook: true // Special flag for book requirement
     },
     {
         title: "Stop 6",
         puzzle: {
-            content: "<strong>Word Problem:</strong><br><br>Mayra works at the lab for 50 weeks a year, earning 10 samples per week. At year-end, she receives a bonus of 3² additional samples. What's her total sample count?",
+            content: "<strong>Solve this word Problem for the clue:</strong><br><br>Mayra works at the lab for 50 weeks a year, earning 10 samples per week. At year-end, she receives a bonus of 3² additional samples. What's her total sample count?",
             answer: "509"
         },
         hint: "Your answer unlocks more than this puzzle's gate, it names the vault where pocket monsters await.",
@@ -87,7 +87,8 @@ const stops = [
     }
 ];
 
-const finalMessage = "This lazy giant snores loud, shaking earth with its sound. When you find this sleeping monster among cards all around, a snapshot is required to complete what you've found.";
+const finalMessage = "This lazy giant snores loud, shaking earth with its sound. When you find this sleeping monster among cards all around, show it to Hector to complete what you've found.";
+const finalVerificationCode = "999"; // Code for finding Snorlax
 
 // Initialize
 function init() {
@@ -210,182 +211,31 @@ function checkLocation() {
 function showSuccess() {
     currentStage = 'success';
     
-    // Check if this is the final stop
-    if (currentStop === stops.length - 1) {
-        // Customize message for final stop
-        document.querySelector('#successScreen h2').textContent = 'Location Found';
-        document.querySelector('#successScreen p').textContent = 'You found it! Now prove you\'re there with a photo.';
-        // Reset to default for other stops
-        document.querySelector('#successScreen h2').textContent = 'Location Found';
-        document.querySelector('#successScreen p').textContent = 'You found it! Now prove you\'re there with a photo.';
+    // Check if this is Stop 5 (requires book finding)
+    if (stops[currentStop].requiresBook) {
+        // Go to book finding screen instead
+        showBookScreen();
+        return;
     }
+    
+    // Clear verification inputs
+    document.getElementById('verificationCode').value = '';
+    document.getElementById('codeFeedback').className = 'feedback';
+    document.getElementById('codeFeedback').textContent = '';
     
     showScreen('successScreen');
 }
 
-// Show Camera
-async function showCamera() {
-    currentStage = 'camera';
-    showScreen('cameraScreen');
-    
-    // Reset camera UI
-    document.getElementById('cameraVideo').style.display = 'block';
-    document.getElementById('capturedPhoto').style.display = 'none';
-    document.getElementById('captureBtn').style.display = 'block';
-    document.getElementById('retakeBtn').style.display = 'none';
-    document.getElementById('bookPhotoBtn').style.display = 'none';
-    document.getElementById('verificationSection').style.display = 'none';
-    document.getElementById('verificationCode').value = '';
-    document.getElementById('codeFeedback').className = 'feedback';
-    document.getElementById('codeFeedback').textContent = '';
-    
-    // Reset text
-    document.querySelector('#cameraScreen p').textContent = 'Take a photo to show Hector';
-    
-    // Reset verification text to default
-    document.querySelector('#verificationSection .verification-text').textContent = 
-        'Show Hector the photo. He\'ll give you a code to continue';
-    
-    // Reset capture button function
-    document.getElementById('captureBtn').onclick = capturePhoto;
-    
-    try {
-        // Request camera access
-        cameraStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' } // Use back camera on mobile
-        });
-        document.getElementById('cameraVideo').srcObject = cameraStream;
-    } catch (error) {
-        console.error('Camera access error:', error);
-        alert('Unable to access camera. Please allow camera permissions and try again.');
-    }
+// Show Book Screen (Stop 5 only)
+function showBookScreen() {
+    currentStage = 'book';
+    document.getElementById('bookVerificationCode').value = '';
+    document.getElementById('bookCodeFeedback').className = 'feedback';
+    document.getElementById('bookCodeFeedback').textContent = '';
+    showScreen('bookScreen');
 }
 
-// Capture Photo
-function capturePhoto() {
-    const video = document.getElementById('cameraVideo');
-    const canvas = document.getElementById('cameraCanvas');
-    const photo = document.getElementById('capturedPhoto');
-    
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // Draw video frame to canvas
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Convert canvas to image
-    const imageDataUrl = canvas.toDataURL('image/png');
-    photo.src = imageDataUrl;
-    
-    // Update UI
-    video.style.display = 'none';
-    photo.style.display = 'block';
-    document.getElementById('captureBtn').style.display = 'none';
-    
-    // Check if this is Stop 5 (Adventures Underground) - needs purple book photo
-    if (currentStop === 4) { // Stop 5 is index 4
-        document.getElementById('retakeBtn').style.display = 'block';
-        document.getElementById('bookPhotoBtn').style.display = 'block';
-        document.querySelector('#cameraScreen p').textContent = 'Before the next puzzle is revealed, your lens must catch this special book, where purple has conquered every nook';
-    } else {
-        document.getElementById('retakeBtn').style.display = 'block';
-        document.getElementById('verificationSection').style.display = 'block';
-    }
-    
-    // Stop camera stream
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-    }
-}
-
-// Take Book Photo (for Stop 5)
-async function takeBookPhoto() {
-    // Hide location photo and buttons
-    document.getElementById('capturedPhoto').style.display = 'none';
-    document.getElementById('retakeBtn').style.display = 'none';
-    document.getElementById('bookPhotoBtn').style.display = 'none';
-    
-    // Show camera again
-    document.getElementById('cameraVideo').style.display = 'block';
-    document.getElementById('captureBtn').style.display = 'block';
-    
-    // Update capture button to capture book photo
-    document.getElementById('captureBtn').onclick = captureBookPhoto;
-    document.querySelector('#cameraScreen p').textContent = 'Take a photo of the purple book';
-    
-    // Restart camera
-    try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' }
-        });
-        document.getElementById('cameraVideo').srcObject = cameraStream;
-    } catch (error) {
-        console.error('Camera access error:', error);
-        alert('Unable to access camera. Please allow camera permissions and try again.');
-    }
-}
-
-// Capture Book Photo
-function captureBookPhoto() {
-    const video = document.getElementById('cameraVideo');
-    const canvas = document.getElementById('cameraCanvas');
-    
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // Draw video frame to canvas
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // We don't need to display the book photo, just capture it
-    
-    // Update UI - hide camera, show verification
-    video.style.display = 'none';
-    document.getElementById('captureBtn').style.display = 'none';
-    document.getElementById('verificationSection').style.display = 'block';
-    document.querySelector('#verificationSection .verification-text').textContent = 
-        'Show Hector both photos. He\'ll give you a code to continue';
-    
-    // Reset the capture button for future use
-    document.getElementById('captureBtn').onclick = capturePhoto;
-    
-    // Stop camera stream
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-    }
-}
-
-// Retake Photo
-async function retakePhoto() {
-    document.getElementById('cameraVideo').style.display = 'block';
-    document.getElementById('capturedPhoto').style.display = 'none';
-    document.getElementById('captureBtn').style.display = 'block';
-    document.getElementById('retakeBtn').style.display = 'none';
-    document.getElementById('bookPhotoBtn').style.display = 'none';
-    document.getElementById('verificationSection').style.display = 'none';
-    document.getElementById('verificationCode').value = '';
-    document.getElementById('codeFeedback').className = 'feedback';
-    document.getElementById('codeFeedback').textContent = '';
-    
-    // Reset text
-    document.querySelector('#cameraScreen p').textContent = 'Take a photo to show Hector';
-    
-    // Restart camera
-    try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' }
-        });
-        document.getElementById('cameraVideo').srcObject = cameraStream;
-    } catch (error) {
-        console.error('Camera access error:', error);
-        alert('Unable to access camera. Please allow camera permissions and try again.');
-    }
-}
-
-// Verify Code
+// Verify Code (regular stops)
 function verifyCode() {
     const enteredCode = document.getElementById('verificationCode').value.trim();
     const correctCode = stops[currentStop].verificationCode;
@@ -410,15 +260,53 @@ function verifyCode() {
     }
 }
 
-// Confirm Photo
-function confirmPhoto() {
-    // Stop camera stream if still active
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
+// Verify Book Code (Stop 5)
+function verifyBookCode() {
+    const enteredCode = document.getElementById('bookVerificationCode').value.trim();
+    const correctCode = stops[currentStop].verificationCode;
+    const feedback = document.getElementById('bookCodeFeedback');
+    
+    if (!enteredCode) {
+        feedback.className = 'feedback incorrect';
+        feedback.textContent = 'Please enter the code from Hector!';
+        return;
     }
     
-    // Move to next stop
-    nextStop();
+    if (enteredCode === correctCode) {
+        feedback.className = 'feedback correct';
+        feedback.textContent = 'Book found! Moving to next puzzle...';
+        
+        setTimeout(() => {
+            nextStop();
+        }, 1500);
+    } else {
+        feedback.className = 'feedback incorrect';
+        feedback.textContent = 'Incorrect code. Show Hector the purple book';
+    }
+}
+
+// Verify Final Code (Snorlax)
+function verifyFinalCode() {
+    const enteredCode = document.getElementById('finalVerificationCode').value.trim();
+    const feedback = document.getElementById('finalCodeFeedback');
+    
+    if (!enteredCode) {
+        feedback.className = 'feedback incorrect';
+        feedback.textContent = 'Please enter the code from Hector!';
+        return;
+    }
+    
+    if (enteredCode === finalVerificationCode) {
+        feedback.className = 'feedback correct';
+        feedback.textContent = 'Sleeping monster found! Quest complete!';
+        
+        setTimeout(() => {
+            showCompletion();
+        }, 1500);
+    } else {
+        feedback.className = 'feedback incorrect';
+        feedback.textContent = 'Incorrect code. Show Hector the Snorlax card';
+    }
 }
 
 // Next Stop
@@ -439,7 +327,18 @@ function nextStop() {
 function showFinal() {
     currentStage = 'final';
     document.getElementById('finalMessage').textContent = finalMessage;
+    document.getElementById('finalVerificationCode').value = '';
+    document.getElementById('finalCodeFeedback').className = 'feedback';
+    document.getElementById('finalCodeFeedback').textContent = '';
     showScreen('finalScreen');
+}
+
+// Show Completion
+function showCompletion() {
+    showScreen('completionScreen');
+    
+    // Update progress to 100%
+    document.getElementById('progressBar').style.width = '100%';
 }
 
 // Enter key support
@@ -463,89 +362,16 @@ document.addEventListener('DOMContentLoaded', function() {
             verifyCode();
         }
     });
+    
+    document.getElementById('bookVerificationCode').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            verifyBookCode();
+        }
+    });
+    
+    document.getElementById('finalVerificationCode').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            verifyFinalCode();
+        }
+    });
 });
-
-// Final Camera Functions
-async function showFinalCamera() {
-    showScreen('finalCameraScreen');
-    
-    // Reset camera UI
-    document.getElementById('finalCameraVideo').style.display = 'block';
-    document.getElementById('finalCapturedPhoto').style.display = 'none';
-    document.getElementById('finalCaptureBtn').style.display = 'block';
-    document.getElementById('finalRetakeBtn').style.display = 'none';
-    document.getElementById('finalConfirmBtn').style.display = 'none';
-    
-    try {
-        // Request camera access
-        cameraStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' }
-        });
-        document.getElementById('finalCameraVideo').srcObject = cameraStream;
-    } catch (error) {
-        console.error('Camera access error:', error);
-        alert('Unable to access camera. Please allow camera permissions and try again.');
-    }
-}
-
-function captureFinalPhoto() {
-    const video = document.getElementById('finalCameraVideo');
-    const canvas = document.getElementById('finalCameraCanvas');
-    const photo = document.getElementById('finalCapturedPhoto');
-    
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // Draw video frame to canvas
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Convert canvas to image
-    const imageDataUrl = canvas.toDataURL('image/png');
-    photo.src = imageDataUrl;
-    
-    // Update UI
-    video.style.display = 'none';
-    photo.style.display = 'block';
-    document.getElementById('finalCaptureBtn').style.display = 'none';
-    document.getElementById('finalRetakeBtn').style.display = 'block';
-    document.getElementById('finalConfirmBtn').style.display = 'block';
-    
-    // Stop camera stream
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-    }
-}
-
-async function retakeFinalPhoto() {
-    document.getElementById('finalCameraVideo').style.display = 'block';
-    document.getElementById('finalCapturedPhoto').style.display = 'none';
-    document.getElementById('finalCaptureBtn').style.display = 'block';
-    document.getElementById('finalRetakeBtn').style.display = 'none';
-    document.getElementById('finalConfirmBtn').style.display = 'none';
-    
-    // Restart camera
-    try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment' }
-        });
-        document.getElementById('finalCameraVideo').srcObject = cameraStream;
-    } catch (error) {
-        console.error('Camera access error:', error);
-        alert('Unable to access camera. Please allow camera permissions and try again.');
-    }
-}
-
-function confirmFinalPhoto() {
-    // Stop camera stream if still active
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-    }
-    
-    // Show completion screen
-    showScreen('completionScreen');
-    
-    // Update progress to 100%
-    document.getElementById('progressBar').style.width = '100%';
-}

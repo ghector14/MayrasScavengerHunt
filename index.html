@@ -55,26 +55,9 @@
             <!-- Success Screen -->
             <div class="screen" id="successScreen">
                 <h2>Location Found</h2>
-                <p>You found it! Now prove you're there with a photo.</p>
-                <button class="btn-primary" onclick="showCamera()">Take Photo</button>
-            </div>
-
-            <!-- Camera Screen -->
-            <div class="screen" id="cameraScreen">
-                <h2>Capture Proof</h2>
-                <p>Take a photo to show Hector</p>
-                <div class="camera-container">
-                    <video id="cameraVideo" autoplay playsinline></video>
-                    <canvas id="cameraCanvas" style="display: none;"></canvas>
-                    <img id="capturedPhoto" style="display: none;" />
-                </div>
-                <div class="camera-buttons">
-                    <button class="btn-primary" id="captureBtn" onclick="capturePhoto()">Capture</button>
-                    <button class="btn-primary" id="retakeBtn" onclick="retakePhoto()" style="display: none;">Retake</button>
-                    <button class="btn-primary" id="bookPhotoBtn" onclick="takeBookPhoto()" style="display: none;">Take Book Photo</button>
-                </div>
-                <div id="verificationSection" style="display: none;">
-                    <p class="verification-text">Show Hector the photo. He'll give you a code to continue</p>
+                <p id="successMessage">You found it! Show Hector for the next code.</p>
+                <div id="verificationSection">
+                    <p class="verification-text">Enter Hector's code to continue</p>
                     <div class="input-group">
                         <input type="text" id="verificationCode" placeholder="Enter code..." autocomplete="off">
                         <button class="btn-primary" onclick="verifyCode()">Verify</button>
@@ -83,27 +66,34 @@
                 </div>
             </div>
 
+            <!-- Book Finding Screen (Stop 5) -->
+            <div class="screen" id="bookScreen">
+                <h2>Special Challenge</h2>
+                <p class="book-challenge">Before the next puzzle is revealed, your lens must catch this special book, where purple has conquered every nook.</p>
+                <p style="text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.7);">Find the purple book and show it to Hector</p>
+                <div id="bookVerificationSection">
+                    <p class="verification-text">Enter Hector's code when you've found it</p>
+                    <div class="input-group">
+                        <input type="text" id="bookVerificationCode" placeholder="Enter code..." autocomplete="off">
+                        <button class="btn-primary" onclick="verifyBookCode()">Verify</button>
+                    </div>
+                    <div class="feedback" id="bookCodeFeedback"></div>
+                </div>
+            </div>
+
             <!-- Final Screen -->
             <div class="screen" id="finalScreen">
                 <h1>Almost done</h1>
                 <p>You've completed all 6 stops of the adventure but...</p>
                 <p class="final-message" id="finalMessage"></p>
-                <button class="btn-primary" id="finalPhotoBtn" onclick="showFinalCamera()">Take Final Photo</button>
-            </div>
-
-            <!-- Final Camera Screen -->
-            <div class="screen" id="finalCameraScreen">
-                <h2>Final Challenge</h2>
-                <p>Capture the sleeping monster</p>
-                <div class="camera-container">
-                    <video id="finalCameraVideo" autoplay playsinline></video>
-                    <canvas id="finalCameraCanvas" style="display: none;"></canvas>
-                    <img id="finalCapturedPhoto" style="display: none;" />
-                </div>
-                <div class="camera-buttons">
-                    <button class="btn-primary" id="finalCaptureBtn" onclick="captureFinalPhoto()">Capture</button>
-                    <button class="btn-primary" id="finalRetakeBtn" onclick="retakeFinalPhoto()" style="display: none;">Retake</button>
-                    <button class="btn-primary" id="finalConfirmBtn" onclick="confirmFinalPhoto()" style="display: none;">Complete Quest</button>
+                <p style="text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.7);">Find the sleeping monster and show it to Hector to complete the quest</p>
+                <div id="finalVerificationSection">
+                    <p class="verification-text">Enter Hector's final code</p>
+                    <div class="input-group">
+                        <input type="text" id="finalVerificationCode" placeholder="Enter code..." autocomplete="off">
+                        <button class="btn-primary" onclick="verifyFinalCode()">Complete Quest</button>
+                    </div>
+                    <div class="feedback" id="finalCodeFeedback"></div>
                 </div>
             </div>
 
